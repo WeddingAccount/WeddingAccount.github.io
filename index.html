@@ -11,7 +11,7 @@
 <style>
 :root{
   --black:#080808; --black2:#141414; --white:#FFFFFF; --soft:#F4F0E8; --grey:#BEBEBE;
-  --line:rgba(255,255,255,.18);
+  --line:rgba(255,255,255,.18); --em:#3FB58A;
   --script:'Great Vibes','Marck Script','Brush Script MT',cursive;
   --serif:'Cormorant Garamond','Cormorant','Times New Roman',Georgia,serif;
   --sans:'Inter','Helvetica Neue',Arial,sans-serif;
@@ -43,17 +43,28 @@ h2{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,6vw,3.8rem);l
 .photo{padding-block:clamp(2rem,6vw,5rem)}
 .photo .wrap{display:grid;gap:2rem;grid-template-columns:1fr}
 .frame{position:relative;background:var(--black2);overflow:hidden;aspect-ratio:4/5;border:1px solid var(--line)}
-.frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);opacity:0;transition:opacity 1.6s ease}
+.frame img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.6s ease}
 .frame img.ok{opacity:1}
 .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;text-align:center;padding:1.5rem;
   background:linear-gradient(160deg,#1c1c1c,#0c0c0c);color:var(--grey);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase}
 .ph svg{width:3.2rem;height:3.2rem;stroke:var(--grey);fill:none;stroke-width:.8;opacity:.7}
 .cap{font-family:var(--serif);font-style:italic;font-size:1.2rem;color:var(--grey);text-align:center;margin:0}
-@media(min-width:860px){
-  .photo .wrap{grid-template-columns:7fr 4fr;align-items:end;gap:4rem}
-  .photo .frame{aspect-ratio:4/5}
-  .photo .cap{text-align:left;padding-bottom:1rem}
-}
+.photo .main{max-width:34rem;margin:0 auto;width:100%}
+
+/* галерея: страница стоит на месте, пока лента не дойдёт до последнего кадра */
+.pin{position:relative}
+.pin[hidden]{display:none}
+.pin-in{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;gap:1.4rem;overflow:hidden}
+.track{display:flex;gap:clamp(.8rem,2.5vw,1.6rem);padding:0 clamp(1.5rem,8vw,6rem);width:max-content;will-change:transform}
+.slide{flex:none;height:min(66vh,44rem,104vw);height:min(66svh,44rem,104vw);aspect-ratio:3/4}
+.pbar{height:1px;background:var(--line);margin:0 clamp(1.5rem,8vw,6rem)}
+.pbar i{display:block;height:100%;background:var(--white);transform:scaleX(0);transform-origin:left}
+#pinDress .pbar i{background:var(--em)}
+#pinDress .frame{border-color:rgba(63,181,138,.4)}
+.cnt{margin:0 clamp(1.5rem,8vw,6rem);text-align:right}
+.pin.still{height:auto!important}
+.pin.still .pin-in{position:static;height:auto;padding:2rem 0;overflow-x:auto}
+.pin.still .pbar,.pin.still .cnt{display:none}
 
 /* day */
 .day{text-align:center;background:var(--black2)}
@@ -73,22 +84,14 @@ h2{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,6vw,3.8rem);l
 .dress .txt{max-width:38rem;margin:2.5rem auto 0;text-align:center;font-family:var(--serif);font-size:clamp(1.15rem,2.6vw,1.4rem);line-height:1.75;color:var(--soft)}
 .dress .txt p{margin:0 0 1.4rem}
 .dress .txt .note{font-size:1rem;color:var(--grey);font-style:italic}
-.moods{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:4rem}
-.moods figure{margin:0}
-.moods .frame{aspect-ratio:3/4}
-.moods figcaption{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--grey);margin-top:.7rem}
-.moods figure:first-child{grid-column:1/-1}
-.moods figure:first-child .frame{aspect-ratio:16/10}
-@media(min-width:860px){
-  .moods{grid-template-columns:repeat(6,1fr);gap:1.2rem;align-items:start}
-  .moods figure:nth-child(1){grid-column:1/4;grid-row:1/3}
-  .moods figure:nth-child(1) .frame{aspect-ratio:4/5}
-  .moods figure:nth-child(2){grid-column:4/6}
-  .moods figure:nth-child(3){grid-column:6/7;margin-top:3rem}
-  .moods figure:nth-child(4){grid-column:4/5}
-  .moods figure:nth-child(5){grid-column:5/7;margin-top:2rem}
-  .moods figure:nth-child(3) .ph span,.moods figure:nth-child(4) .ph span{font-size:.6rem}
-}
+.dress .label{color:var(--em)}
+.dress .txt strong{color:var(--em);font-weight:400}
+.dress .plus{font-family:var(--serif);font-style:italic;font-size:clamp(1.3rem,4vw,2.1rem);letter-spacing:.34em;text-transform:uppercase;color:var(--em);margin:.4rem 0 0}
+.sws{display:flex;justify-content:center;gap:.7rem;margin-top:1.6rem}
+.sws i{width:1.6rem;height:1.6rem;border-radius:50%;border:1px solid var(--line);background:#000}
+.sws i.e{background:var(--em);border-color:var(--em)}
+.dress{padding-bottom:2rem}
+
 
 /* final */
 .final{text-align:center;min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:radial-gradient(ellipse at 50% 60%,var(--black2),var(--black) 70%)}
@@ -120,10 +123,11 @@ a:focus-visible{outline:2px solid var(--white);outline-offset:4px}
 <main>
 <section class="photo" id="photo" aria-label="Фотография пары">
   <div class="wrap">
-    <div class="frame rv" id="couple"></div>
-    <p class="cap rv" style="--d:.3s">София и Кирилл</p>
+    <div class="frame main rv" id="couple"></div>
+    <p class="cap rv">София и Кирилл</p>
   </div>
 </section>
+<div class="pin" id="pinCouple" role="group" aria-label="Фотографии пары"></div>
 
 <section class="day" id="day">
   <div class="wrap">
@@ -137,15 +141,17 @@ a:focus-visible{outline:2px solid var(--white);outline-offset:4px}
   <div class="wrap">
     <div class="head">
       <p class="label rv">Dress code</p>
-      <p class="big rv" style="--d:.2s" aria-label="Чёрный">BLACK</p>
+      <p class="big rv" style="--d:.2s" aria-label="Чёрный и изумрудный">BLACK</p>
+      <p class="plus rv" style="--d:.35s">+ Emerald</p>
+      <div class="sws rv" style="--d:.45s" aria-hidden="true"><i></i><i class="e"></i></div>
     </div>
     <div class="txt rv">
-      <p>Нам будет особенно приятно, если вы поддержите атмосферу нашего праздника и выберете для своего образа чёрный цвет. Вечерние силуэты, лаконичные костюмы, изящные платья и выразительные аксессуары — выбирайте то, в чём вы чувствуете себя элегантно и уверенно.</p>
-      <p class="note">Допускаются деликатные детали белого, серебристого и других нейтральных оттенков. Главное — сохранить общую эстетику чёрного образа.</p>
+      <p>Нам будет особенно приятно, если вы поддержите атмосферу нашего праздника и выберете для своего образа сочетание чёрного и <strong>изумрудно-зелёного</strong> цветов. Вечерние силуэты, лаконичные костюмы и изящные платья — выбирайте то, в чём вы чувствуете себя элегантно и уверенно.</p>
+      <p class="note">Допускаются деликатные детали белого и других нейтральных оттенков. Главное — сохранить общую эстетику образа.</p>
     </div>
-    <div class="moods" id="moods"></div>
   </div>
 </section>
+<div class="pin" id="pinDress" role="group" aria-label="Примеры образов"></div>
 
 <section class="final" id="final">
   <h2 class="rv">С нетерпением ждём встречи с вами</h2>
@@ -158,29 +164,32 @@ a:focus-visible{outline:2px solid var(--white);outline-offset:4px}
 <script>
 /* ============ НАСТРОЙКИ (редактируйте только этот блок) ============ */
 const SITE = {
-  /* Фотография пары: укажите путь или ссылку, например "img/couple.jpg". null — показывается заглушка. */
-  couplePhoto: null,
+  /* Фотографии пары: пути к файлам, например "img/1.jpg". Первая — главная (крупная), остальные — в ленте.
+     null — показывается заглушка (сейчас это демонстрационные места под фото). */
+  couplePhotos: ["img/основная.jpg", "img/10.jpg", "img/11.jpg", "img/12.jpg", "img/13.jpg", "img/14.jpg"],
 
   /* Мероприятия. Пустая строка "" = строка не отображается.
      Если все поля пусты, показывается «Информация уточняется». */
   events: [
     { title: "Роспись", kind: "ЗАГС",
-      place: "",      /* название и адрес ЗАГСа */
-      time: "",       /* время церемонии, например "14:00" */
-      mapUrl: "" },   /* ссылка на карту; кнопка появится, только если заполнено */
+      place: "Митинский Дворец Бракосочетания",
+      address: "Москва, Дубравная улица, 48А",
+      time: "11:05",
+      mapUrl: "" },   /* свою ссылку на карту можно вписать сюда; иначе кнопка ищет по адресу в Яндекс Картах */
     { title: "Праздничный вечер", kind: "Ресторан",
-      place: "",      /* название и адрес ресторана */
-      time: "",       /* время начала банкета */
+      place: "Мама Хуана",
+      address: "Москва, 1-я Брестская улица, 10с4",
+      time: "13:00",
       mapUrl: "" }
   ],
 
   /* Фотографии для дресс-кода. src: null — заглушка. */
   dress: [
-    { src: null, caption: "Вечерний образ" },
-    { src: null, caption: "Платье" },
-    { src: null, caption: "Костюм" },
-    { src: null, caption: "Аксессуары" },
-    { src: null, caption: "Обувь" }
+    { src: "img/5.jpg", caption: "" },
+    { src: "img/1.jpg", caption: "" },   /* caption — необязательная подпись под фото */
+    { src: "img/2.jpg", caption: "" },
+    { src: "img/3.jpg", caption: "" },
+    { src: "img/4.jpg", caption: "" },
   ]
 };
 /* ================================================================== */
@@ -206,27 +215,46 @@ function fillFrame(el, src, alt, phText){
 }
 
 /* Фото пары */
-fillFrame(document.getElementById('couple'), SITE.couplePhoto, 'Фотография Софии и Кирилла', 'Здесь будет фотография пары');
+const P = SITE.couplePhotos;
+fillFrame(document.getElementById('couple'), P[0], 'Главная фотография Софии и Кирилла', 'Здесь будет главное фото');
+buildPin('pinCouple', P.slice(1).map((s,i) => ({src:s, alt:'Фотография пары '+(i+2), ph:'Фото '+(i+2)})));
 
 /* Мероприятия */
 document.getElementById('events').innerHTML = SITE.events.map((e,i) => {
   const rows = [];
-  if(e.place) rows.push('<dt>'+(i===0?'Место':'Место')+'</dt><dd>'+esc(e.place)+'</dd>');
+  if(e.place) rows.push('<dt>Место</dt><dd>'+esc(e.place)+'</dd>');
+  if(e.address) rows.push('<dt>Адрес</dt><dd>'+esc(e.address)+'</dd>');
   if(e.time)  rows.push('<dt>Время</dt><dd>'+esc(e.time)+'</dd>');
   const body = rows.length ? '<dl>'+rows.join('')+'</dl>' : '<p class="tbd">Информация уточняется</p>';
-  const link = (e.mapUrl && e.place) ? '<a href="'+esc(e.mapUrl)+'" target="_blank" rel="noopener">Открыть на карте</a>' : '';
+  const q = [e.place, e.address].filter(Boolean).join(', ');
+  const url = e.mapUrl || (e.address ? 'https://yandex.ru/maps/?text=' + encodeURIComponent(q) : '');
+  const link = url ? '<a href="'+esc(url)+'" target="_blank" rel="noopener">Открыть на карте</a>' : '';
   return '<article class="ev rv" style="--d:'+(i*.2)+'s"><p class="label">'+esc(e.kind)+'</p><h3>'+esc(e.title)+'</h3>'+body+link+'</article>';
 }).join('');
 
 /* Дресс-код */
-const moods = document.getElementById('moods');
-SITE.dress.forEach((d,i) => {
-  const f = document.createElement('figure'); f.className = 'rv'; f.style.setProperty('--d', (i*.12)+'s');
-  const fr = document.createElement('div'); fr.className = 'frame';
-  fillFrame(fr, d.src, d.caption, 'Фото: ' + d.caption.toLowerCase());
-  const c = document.createElement('figcaption'); c.textContent = d.caption;
-  f.append(fr, c); moods.append(f);
-});
+/* Галерея «воздушная»: вертикальная прокрутка двигает ленту вбок, экран закреплён (sticky) */
+function buildPin(id, items){
+  const pin = document.getElementById(id);
+  if(!items.length){ pin.hidden = true; return; }
+  pin.innerHTML = '<div class="pin-in"><div class="track"></div><div class="pbar"><i></i></div><p class="label cnt"></p></div>';
+  const track = pin.querySelector('.track'), bar = pin.querySelector('.pbar i'), cnt = pin.querySelector('.cnt');
+  items.forEach(it => { const f = document.createElement('div'); f.className = 'frame slide'; fillFrame(f, it.src, it.alt, it.ph); track.append(f); });
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ pin.classList.add('still'); return; }
+  const H = CSS.supports('height','100svh') ? '100svh' : '100vh';
+  let dist = 0, raf = 0;
+  const update = () => {
+    raf = 0;
+    const p = dist ? Math.min(1, Math.max(0, -pin.getBoundingClientRect().top / dist)) : 0;
+    track.style.transform = 'translate3d(' + (-p*dist) + 'px,0,0)';
+    bar.style.transform = 'scaleX(' + p + ')';
+    cnt.textContent = (Math.round(p*(items.length-1)) + 1) + ' / ' + items.length;
+  };
+  const size = () => { dist = Math.max(0, track.scrollWidth - innerWidth); pin.style.height = 'calc(' + H + ' + ' + dist + 'px)'; update(); };
+  addEventListener('scroll', () => { if(!raf) raf = requestAnimationFrame(update); }, {passive:true});
+  addEventListener('resize', size); addEventListener('load', size); size();
+}
+buildPin('pinDress', SITE.dress.map((d,i) => ({src:d.src, alt:d.caption || 'Образ '+(i+1), ph:'Образ '+(i+1)})));
 
 /* Появление при прокрутке */
 const rv = document.querySelectorAll('.rv');
